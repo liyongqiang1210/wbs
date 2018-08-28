@@ -52,10 +52,10 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-# 开启中间件,(在这里设置代理IP和设置user-agent)
+# 开启middlewares中间件,(在这里设置代理IP和设置user-agent)
 DOWNLOADER_MIDDLEWARES = {
    # 'wbs.middlewares.WbsDownloaderMiddleware': 543,
-   'wbs.middlewares.my_user_agent': 543
+   'wbs.middlewares.my_user_agent': 543 # 更换user_agent类
 }
 
 # Enable or disable extensions
@@ -66,10 +66,19 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-# 开启pipelines,开启后才能将数据存储到数据库
+# 开启pipelines组件
 ITEM_PIPELINES = {
-   'wbs.pipelines.WbsPipeline': 300,
+    'wbs.pipelines.WbsPipeline': 300, # 默认类
+    'wbs.pipelines.MysqlPipeline': 301, # 操作mysql数据库类
 }
+
+
+#Mysql数据库的配置信息 
+MYSQL_HOST = '127.0.0.1' 
+MYSQL_DBNAME = 'lyq_db' #数据库名字
+MYSQL_USER = 'root' #数据库账号
+MYSQL_PASSWORD = 'root' #数据库密码
+MYSQL_PORT = 3306 #数据库端口
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -91,3 +100,6 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+
+
