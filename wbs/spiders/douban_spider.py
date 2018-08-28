@@ -13,7 +13,7 @@ class DouBanSpider(scrapy.Spider):
 	start_urls = ["https://movie.douban.com/top250"]
 	#编写爬取方法
 	def parse(self, response):
-		
+		""" """
 		#先获取电影信息的div集合
 		film_list = response.xpath('//div[@class="item"]')
 		# 循环电影信息集合
