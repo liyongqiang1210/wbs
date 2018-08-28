@@ -2,4 +2,4 @@
 
 from scrapy import cmdline
 
-cmdline.execute('scrapy crawl weibo'.split(' '))
+cmdline.execute('scrapy crawl douban'.split(' '))

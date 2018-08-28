@@ -55,7 +55,7 @@ ROBOTSTXT_OBEY = False
 # 开启middlewares中间件,(在这里设置代理IP和设置user-agent)
 DOWNLOADER_MIDDLEWARES = {
    # 'wbs.middlewares.WbsDownloaderMiddleware': 543,
-   'wbs.middlewares.my_user_agent': 543 # 更换user_agent类
+   'wbs.middlewares.MyUserAgent': 543 # 更换user_agent类
 }
 
 # Enable or disable extensions
@@ -69,7 +69,7 @@ DOWNLOADER_MIDDLEWARES = {
 # 开启pipelines组件
 ITEM_PIPELINES = {
     'wbs.pipelines.WbsPipeline': 300, # 默认类
-    'wbs.pipelines.MysqlPipeline': 301, # 操作mysql数据库类
+    # 'wbs.pipelines.MysqlPipeline': 301, # 操作mysql数据库类
 }
 
 

@@ -4,9 +4,9 @@
 import scrapy
 from wbs.items import DouBanItem
 
-class WeiBoSpider(scrapy.Spider):
+class DouBanSpider(scrapy.Spider):
 	#设置name
-	name = "weibo"
+	name = "douban"
 	#设定域名
 	allowed_domains = ["movie.douban.com"]
 	#填写爬取地址
@@ -25,6 +25,8 @@ class WeiBoSpider(scrapy.Spider):
 			item['film_serial_num'] = film.xpath('.//div[@class="pic"]/em/text()').extract_first()
 			# 获取电影名称
 			item['film_name'] = film.xpath('.//span[@class="title"]/text()').extract_first()
+			# 获取电影评论内容url
+			item['film_comment_url'] = film.xpath('.//div[@class="hd"]/a/@href').extract_first()
 			# 获取电影简介
 			content_list = film.xpath('.//p[@class=""]/text()').extract()
 			# 对多行数据进行处理
@@ -36,6 +38,10 @@ class WeiBoSpider(scrapy.Spider):
 			item['film_rating_num'] = film.xpath('.//div[@class="star"]/span[last()]/text()').extract_first()
 			# 获取电影标签
 			item['film_label'] = film.xpath('.//span[@class="inq"]/text()').extract_first()
+
+			# 根据电影评论url获取评论数据
+			comment_url = item['film_comment_url'] + 'comments?status=P'
+			# yield scrapy.Request(comment_url, callback=self.parse_comment)
 			#返回信息将数据yield到piplines中
 			yield item
 
@@ -44,7 +50,20 @@ class WeiBoSpider(scrapy.Spider):
 		if next_link != None:
 			# 请求下一页规则
 			yield scrapy.Request('https://movie.douban.com/top250' + next_link, callback=self.parse)
-			# print('下一页：https://movie.douban.com/top250' + next_link)
+
+	def parse_comment(self, response):
+		""" 获取电影评论数据 """
+
+		print("评论区")
+		comment_list = response.xpath('//div[@class="comment-item"]')
+		# 遍历评论列表
+		for comment in comment_list:
+			item = FilmCommentItem()
+			# 获取评论人昵称
+			item['comment_nick_name'] = comment.xpath('.//div[@class="comment-info"]/h3/span[1]/a/text()').extract_first()
+
+			yield item
+
 
 
 

@@ -102,10 +102,10 @@ class WbsDownloaderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-class my_proxy(object):
+class MyProxy(object):
     """更换ip"""
 
-class my_user_agent(object):
+class MyUserAgent(object):
     """更换user-Agent"""
 
     def process_request(self, request, spider):
