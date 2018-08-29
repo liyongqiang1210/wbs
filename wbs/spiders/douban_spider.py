@@ -11,30 +11,33 @@ class DouBanSpider(scrapy.Spider):
 	#设置name
 	name = 'douban'
 	#设定域名
-	allowed_domains = ['baidu.com','movie.douban.com']
+	allowed_domains = ['baidu.com','movie.douban.com','douban.com']
 	#填写爬取地址
-	start_urls = ['https://www.baidu.com']
+	start_urls = ['https://movie.douban.com/top250']
 
 	def open_chrome(self, response):
 		"""  """
 		print("打开浏览器========================>")
-		driver_path = 'E:\Program Files (x86)\python\Scripts\chromedriver.exe'
-		driver = webdriver.Chrome(executable_path=driver_path)
-		# 从文件中读取cookies
-		with open("douban_cookies.json", "r", encoding='utf-8') as fp:
-			# 解析json数据
-			cookies = json.loads(fp.read())
-		
-		for cookie in cookies:
-			driver.add_cookie({
-				'domain': '.douban.com', # 此处xxx.com前，需要带点
-				'name': cookie['name'],
-				'value': cookie['value'],
-				'path': '/',
-				'expires': None
-			})
-
-		driver.get('https://movie.douban.com/top250')
+# 		driver_path = 'E:\python\Scripts\chromedriver.exe'
+# 		driver = webdriver.Chrome(executable_path=driver_path)
+# 		# 从文件中读取cookies
+# 		with open("douban_cookies.json", "r", encoding='utf-8') as fp:
+# 			# 解析json数据
+# 			cookies = json.loads(fp.read())
+# 
+# 			for cookie in cookies:
+# 				print('-------------------')
+# 				print(cookie)
+# 				print(cookie['name'])
+# 				driver.add_cookie({
+# 						'domain': '.movie.douban.com',  # 此处xxx.com前，需要带点
+# 						'name': cookie['name'],
+# 						'value': cookie['value'],
+# 						'path': '/',
+# 						'expiry': None
+# 					})
+# 
+# 		driver.get('https://movie.douban.com/top250')
 
 		time.sleep(60)
 		
@@ -42,9 +45,8 @@ class DouBanSpider(scrapy.Spider):
 	def get_douban_cookies(self):
 		""" 获取豆瓣用户登录后的cookies """
 
-		global driver
 		# 打开豆瓣页面
-		driver_path = 'E:\Program Files (x86)\python\Scripts\chromedriver.exe'
+		driver_path = 'E:\python\Scripts\chromedriver.exe'
 		driver = webdriver.Chrome(executable_path=driver_path)
 		driver.get('https://movie.douban.com/top250')
 
@@ -61,7 +63,7 @@ class DouBanSpider(scrapy.Spider):
 			username.send_keys('1240965061@qq.com')
 			# 获取密码输入框并填入值
 			password = driver.find_element_by_id('password')
-			password.send_keys('douban121007')
+			password.send_keys('')
 
 			time.sleep(2)
 
@@ -71,14 +73,17 @@ class DouBanSpider(scrapy.Spider):
 			
 			time.sleep(20)
 
+			driver.quit()
+
 			# 获取登录后的cookies并转换成json格式
-			cookies = driver.get_cookies()
+			cookies = json.dumps(driver.get_cookies())
 			# 将cookies保存到文件中
 			with open('douban_cookies.json','w') as fp:
 				# 清空文件内容
 				fp.truncate()
 				# 保存到文件
-				json.dumps(cookies)
+				fp.write(cookies)
+				
 		else:
 			# 从文件中读取cookies
 			with open("douban_cookies.json", "r") as fp:
