@@ -63,7 +63,7 @@ class DouBanSpider(scrapy.Spider):
 			username.send_keys('1240965061@qq.com')
 			# 获取密码输入框并填入值
 			password = driver.find_element_by_id('password')
-			password.send_keys(' ')
+			password.send_keys('')
 
 			time.sleep(2)
 
