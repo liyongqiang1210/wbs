@@ -18,26 +18,29 @@ class DouBanSpider(scrapy.Spider):
 	def open_chrome(self, response):
 		"""  """
 		print("打开浏览器========================>")
-		driver_path = 'E:\python\Scripts\chromedriver.exe'
+		driver_path = 'E:\Program Files (x86)\python\Scripts\chromedriver.exe'
 		driver = webdriver.Chrome(executable_path=driver_path)
 		driver.get('https://movie.douban.com/top250')
+		
 		# 从文件中读取cookies
 		with open("douban_cookies.json", "r", encoding='utf-8') as fp:
 			# 解析json数据
 			cookies = json.loads(fp.read())
- 
+			print('==================>开始添加cookies')
 			for cookie in cookies:
-				print('-------------------')
+				
 				print(cookie)
-				print(cookie['name'])
 				driver.add_cookie({
-						'domain': '.movie.douban.com',  # 此处xxx.com前，需要带点
+						'domain': cookie['domain'],
 						'name': cookie['name'],
 						'value': cookie['value'],
 						'path': '/',
-						'expiry': None
+						'expires': None
 					})
- 
+			print('==================>添加cookies成功')
+					
+		# 刷新当前页面
+		# driver.refresh()
 		driver.get('https://movie.douban.com/top250')
 
 		time.sleep(60)
@@ -46,57 +49,46 @@ class DouBanSpider(scrapy.Spider):
 	def get_douban_cookies(self):
 		""" 获取豆瓣用户登录后的cookies """
 
-		# 打开豆瓣页面
-		driver_path = 'E:\python\Scripts\chromedriver.exe'
+		# 打开豆瓣登录页面
+		driver_path = 'E:\Program Files (x86)\python\Scripts\chromedriver.exe'
 		driver = webdriver.Chrome(executable_path=driver_path)
-		driver.get('https://movie.douban.com/top250')
+		driver.get('https://www.douban.com/accounts/login?source=movie')
 
-		# 如果页面中存在登录按钮那么我们就登录豆瓣获取cookies
-		if '登录' in driver.page_source:
-			# 获取进入豆瓣登录页面按钮
-			login_a = driver.find_element_by_css_selector('a')
-			login_a.click()
+		print('=================================>豆瓣登录页面已打开')
 
-			time.sleep(1)
-
-			# 获取登录输入框并填入值
-			username = driver.find_element_by_id('email')
-			username.send_keys('1240965061@qq.com')
-			# 获取密码输入框并填入值
-			password = driver.find_element_by_id('password')
-			password.send_keys('')
-
-			time.sleep(2)
-
-			# 找到登录按钮
-			login = driver.find_element_by_name('login')
-			login.click()
-			
-			time.sleep(20)
-
-			# 获取登录后的cookies并转换成json格式
-			cookies = json.dumps(driver.get_cookies())
-			# 将cookies保存到文件中
-			with open('douban_cookies.json','w') as fp:
-				# 清空文件内容
-				fp.truncate()
-				# 保存到文件
-				fp.write(cookies)
-				
-		else:
-			# 从文件中读取cookies
-			with open("douban_cookies.json", "r") as fp:
-				# 解析json数据
-				cookies = json.loads(fp)
-
+		# 获取登录输入框并填入值
+		username = driver.find_element_by_id('email')
+		username.send_keys('1240965061@qq.com')
+		# 获取密码输入框并填入值
+		password = driver.find_element_by_id('password')
+		password.send_keys('douban121007')
+		# 找到登录按钮
+		login = driver.find_element_by_name('login')
+		login.click()
+		
+		print('=================================>豆瓣用户登录成功')
+		
+		time.sleep(20)
+		
+		# 获取登录后的cookies并转换成json格式
+		cookies = json.dumps(driver.get_cookies())
+		print('=================================>获取用户登录后的cookies成功')
+		# 将cookies保存到文件中
+		with open('douban_cookies.json','w') as fp:
+			# 清空文件内容
+			fp.truncate()
+			# 保存到文件
+			fp.write(cookies)
+		print('=================================>保存用户登录后的cookies成功')
 		driver.quit()
+		print('=================================>浏览器关闭成功')
 		return cookies
 
 
 	# 编写爬取方法
 	def parse(self, response):
 		""" """
-
+		# self.get_douban_cookies()
 		yield scrapy.Request(url=self.start_urls[0], callback=self.open_chrome)
 		# 先获取电影信息的div集合
 		# film_list = response.xpath('//div[@class="item"]')
