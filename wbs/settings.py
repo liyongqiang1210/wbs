@@ -55,7 +55,8 @@ ROBOTSTXT_OBEY = False
 # 开启middlewares中间件,(在这里设置代理IP和设置user-agent)
 DOWNLOADER_MIDDLEWARES = {
    # 'wbs.middlewares.WbsDownloaderMiddleware': 543,
-   'wbs.middlewares.MyUserAgent': 543 # 更换user_agent类
+   'wbs.middlewares.MyUserAgentMiddleware': 543, # 更换user_agent类
+   'wbs.middlewares.MyCookiesMiddleware': 545, # 更换cookies类
 }
 
 # Enable or disable extensions
