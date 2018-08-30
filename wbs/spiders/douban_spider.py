@@ -22,20 +22,18 @@ class DouBanSpider(scrapy.Spider):
 		driver = webdriver.Chrome(executable_path=driver_path)
 		driver.get('https://movie.douban.com/top250')
 		
-		# 从文件中读取cookies
-		with open("douban_cookies.json", "r", encoding='utf-8') as fp:
-			# 解析json数据
-			cookies = json.loads(fp.read())
-			print('=================================>开始添加cookies')
-			for cookie in cookies:
-				driver.add_cookie({
-						'domain': cookie['domain'],
-						'name': cookie['name'],
-						'value': cookie['value'],
-						'path': '/',
-						'expires': None
-					})
-			print('=================================>添加cookies成功')
+		# 从本地文件中读取cookies
+		cookies = self.get_douban_cookies()
+		print('=================================>开始添加cookies')
+		for cookie in cookies:
+			driver.add_cookie({
+					'domain': cookie['domain'],
+					'name': cookie['name'],
+					'value': cookie['value'],
+					'path': '/',
+					'expires': None
+				})
+		print('=================================>添加cookies成功')
 					
 		# 刷新当前页面
 		driver.refresh()
