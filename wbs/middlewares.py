@@ -106,6 +106,10 @@ class WbsDownloaderMiddleware(object):
 class MyProxyMiddleware(object):
     """更换ip"""
 
+    #def process_request(self, request, spider):
+        #ip = request.meta['proxy']
+        #print('================================>ip地址为:')
+
 class MyUserAgentMiddleware(object):
     """更换user-Agent"""
 
@@ -177,7 +181,11 @@ class MyUserAgentMiddleware(object):
     ]
         # 随机取出一个User-Agent
         agent = random.choice(agents)
-        request.headers['User-Agent'] = agent
+        if agent:
+            request.headers['User-Agent'] = agent
+        print('=================User-Agent===================')
+        print(request.headers['User-Agent'])
+        print('=================User-Agent===================')
 
 class MyCookiesMiddleware(object):
     """ 换Cookie """

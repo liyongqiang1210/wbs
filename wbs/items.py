@@ -33,6 +33,12 @@ class FilmCommentItem(scrapy.Item):
 	comment_nick_name = scrapy.Field()
 	# 评论内容
 	comment_content = scrapy.Field()
+	# 评论日期
+	comment_time = scrapy.Field()
+	# 觉得有用人数
+	comment_useful_num = scrapy.Field()
+	# 评论级别
+	comment_rating = scrapy.Field()
 
 		
 	

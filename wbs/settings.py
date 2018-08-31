@@ -55,8 +55,10 @@ ROBOTSTXT_OBEY = False
 # 开启middlewares中间件,(在这里设置代理IP和设置user-agent)
 DOWNLOADER_MIDDLEWARES = {
    # 'wbs.middlewares.WbsDownloaderMiddleware': 543,
+   'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware' : None,
    'wbs.middlewares.MyUserAgentMiddleware': 543, # 更换user_agent类
    'wbs.middlewares.MyCookiesMiddleware': 545, # 更换cookies类
+   'wbs.middlewares.MyProxyMiddleware': 542, # 更换ip
 }
 
 # Enable or disable extensions
@@ -74,12 +76,13 @@ ITEM_PIPELINES = {
 }
 
 
-#Mysql数据库的配置信息 
-MYSQL_HOST = '127.0.0.1' 
-MYSQL_DBNAME = 'lyq_db' #数据库名字
-MYSQL_USER = 'root' #数据库账号
-MYSQL_PASSWORD = 'root' #数据库密码
-MYSQL_PORT = 3306 #数据库端口
+# Mysql数据库的配置信息 
+MYSQL_HOST = '127.0.0.1' # 数据库IP地址
+MYSQL_DBNAME = 'lyq_db' # 数据库名字
+MYSQL_USER = 'root' # 数据库账号
+MYSQL_PASSWORD = 'root' # 数据库密码
+MYSQL_PORT = 3306 # 数据库端口
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -102,5 +105,17 @@ MYSQL_PORT = 3306 #数据库端口
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+# 开启日志
+# LOG_LEVEL = 'DEBUG'
+# 日志保存路径
+# LOG_FILE = './douban_log.log'
 
-
+#是否启用日志（创建日志后，不需开启，进行配置）
+# LOG_ENABLED=False  #（默认为True，启用日志）
+ 
+#日志编码
+# LOG_ENCODING='utf-8'
+ 
+#如果是True ，进程当中，所有标准输出（包括错误）将会被重定向到log中
+#例如：在爬虫代码中的 print（）
+# LOG_STDOUT=True  #(默认为False)
